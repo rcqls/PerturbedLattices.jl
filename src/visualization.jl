@@ -6,7 +6,6 @@ Visualization functions for perturbed lattice models.
     plot_points(pl::PerturbedLatticeModel; title_str="")
 
 Visualize the current point cloud in 2D or 3D.
-
 """
 function plot_points(pl::PerturbedLatticeModel; title_str="")
     if pl.d == 2
