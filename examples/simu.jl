@@ -4,6 +4,7 @@ Simulation of a perturbed lattice model with Strauss potential and Gaussian pert
 """
 
 using PerturbedLattices
+using Plots
 
 beta_values = [-log(0.9)]
 sigma_values = [0.5, 1.0]
@@ -34,10 +35,12 @@ for beta in beta_values
             # Plot the point grid connection
             p = plot_point_grid_connection(pl, Window)
 
+            display(p)
+
             # Save the image
-            filename = "lattice_beta_$(round(beta, digits=3))_sigma_$(sigma)_RS_$(rs).png"
-            savefig(p, filename)
-            println("Saved plot to $filename\n")
+            #filename = "lattice_beta_$(round(beta, digits=3))_sigma_$(sigma)_RS_$(rs).png"
+            #savefig(p, filename)
+            #println("Saved plot to $filename\n")
         end
     end
 end

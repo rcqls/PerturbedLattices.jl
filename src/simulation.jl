@@ -1,15 +1,5 @@
 """
-Monte Carlo simulation functions.
-"""
-
-"""
-    iterate!(pl::PerturbedLattice)
-
-Perform one iteration of the Metropolis-Hastings algorithm.
-
-Randomly selects a point, proposes a new position based on the perturbation
-distribution, and accepts or rejects based on the energy change.
-
+Monte Carlo simulation functions using Metropolis-Hasting algorithm. 
 """
 function iterate!(pl::PerturbedLattice)
     new_config = deepcopy(pl.points)
