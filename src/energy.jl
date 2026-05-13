@@ -68,69 +68,15 @@ function local_energy(adjacencyS::Matrix{Int}, adjacencyHC::Matrix{Int}, i::Int)
     return Float64(sum(adjacencyS[i, :]))
 end
 
-
-
-
-
-
-
-
-
-"""
-    local_energy_MC(pl::PerturbedLatticeModel)
-
-Compute Monte Carlo estimates of local energy for all points.
-
-This function fills `pl.loc_en_mc` with energy estimates for each point
-across multiple perturbation samples.
-
-"""
-function local_energy_MC(pl::PerturbedLatticeModel)
-    for i in 1:(2*pl.N+1)^pl.d
-        for j in 1:pl.NMC
-            new_config = deepcopy(pl.points)
-            if pl.Distrib == "Gauss"
-                if pl.d == 2
-                    dist = MvNormal([0.0, 0.0], pl.Cov)
-                    x = rand(pl.rng, dist)
-                    new_config[i] = pl.grid[i] .+ x
-                elseif pl.d == 3
-                    dist = MvNormal([0.0, 0.0, 0.0], pl.Cov)
-                    x = rand(pl.rng, dist)
-                    new_config[i] = pl.grid[i] .+ x
-                end
-            elseif pl.Distrib == "Unif"
-                x = [rand(pl.rng, Uniform(pl.BorneUnif[k, 1], pl.BorneUnif[k, 2]))
-                     for k in 1:pl.d]
-                new_config[i] = pl.grid[i] .+ x
-            end
-            pl.loc_en_mc[i,j] = local_energy(pl, new_config, i)
-        end
-    end
-    return nothing
+function local_energy(adjacency::Matrix{Int}, i::Int)
+    return Float64(sum(adjacency[i, :]))
 end
 
-"""
-    estimate_int_DLR(pl::PerturbedLatticeModel, i::Int, beta::Float64)
 
-Estimate the integral term in the DLR equation using Monte Carlo.
-"""
 
-function estimate_int_DLR(pl::PerturbedLatticeModel, i::Int, beta::Float64)
-    num = 0.0
-    denom = 0.0
-    for j in 1:pl.NMC
-        loc_en = pl.loc_en_mc[i,j]
-        if loc_en == Inf
-            num += 0
-            denom += 0
-        else
-            num += loc_en*exp(-beta*loc_en)
-            denom += exp(-beta*loc_en)
-        end
-    end
-    if denom != 0
-        return num / denom
-    end
-    return 0.0
-end
+
+
+
+
+
+

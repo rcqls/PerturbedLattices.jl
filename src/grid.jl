@@ -3,7 +3,7 @@ Grid creation and manipulation functions.
 """
 
 
-function create_grid(pl::PerturbedLatticeModel)
+function create_grid(pl::PerturbedLattice)
     grid = Vector{Vector{Float64}}()
 
     if pl.d == 2
@@ -28,12 +28,12 @@ function create_grid(pl::PerturbedLatticeModel)
 end
 
 """
-    shift!(pl::PerturbedLatticeModel, u::Vector)
+    shift!(pl::PerturbedLattice, u::Vector)
 
 Translate all points by vector u.
 
 """
-function shift!(pl::PerturbedLatticeModel, u::Vector)
+function shift!(pl::PerturbedLattice, u::Vector)
     for i in 1:length(pl.points)
         pl.points[i] .+= u
     end

@@ -3,11 +3,11 @@ Visualization functions for perturbed lattice models.
 """
 
 """
-    plot_points(pl::PerturbedLatticeModel; title_str="")
+    plot_points(pl::PerturbedLattice; title_str="")
 
 Visualize the current point cloud in 2D or 3D.
 """
-function plot_points(pl::PerturbedLatticeModel; title_str="")
+function plot_points(pl::PerturbedLattice; title_str="")
     if pl.d == 2
         x_coords = [p[1] for p in pl.points]
         y_coords = [p[2] for p in pl.points]
@@ -33,7 +33,7 @@ function plot_points(pl::PerturbedLatticeModel; title_str="")
 end
 
 """
-    plot_point_grid_connection(pl::PerturbedLatticeModel, Window::Matrix{Float64})
+    plot_point_grid_connection(pl::PerturbedLattice, Window::Matrix{Float64})
 
 Visualize connections between grid points and their perturbed positions.
 
@@ -42,7 +42,7 @@ Shows:
 - Blue points: Perturbed positions
 - Gray lines/arrows: Connections showing the perturbation
 """
-function plot_point_grid_connection(pl::PerturbedLatticeModel, Window::Matrix{Float64})
+function plot_point_grid_connection(pl::PerturbedLattice, Window::Matrix{Float64})
     if pl.d == 2
         grid_x = [p[1] for p in pl.grid]
         grid_y = [p[2] for p in pl.grid]

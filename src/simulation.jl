@@ -3,7 +3,7 @@ Monte Carlo simulation functions.
 """
 
 """
-    iterate!(pl::PerturbedLatticeModel)
+    iterate!(pl::PerturbedLattice)
 
 Perform one iteration of the Metropolis-Hastings algorithm.
 
@@ -11,7 +11,7 @@ Randomly selects a point, proposes a new position based on the perturbation
 distribution, and accepts or rejects based on the energy change.
 
 """
-function iterate!(pl::PerturbedLatticeModel)
+function iterate!(pl::PerturbedLattice)
     new_config = deepcopy(pl.points)
     i = rand(pl.rng, 1:(2*pl.N+1)^pl.d)
 
@@ -32,10 +32,9 @@ function iterate!(pl::PerturbedLatticeModel)
         new_config[i] = pl.grid[i] .+ x
     end
     
-    #compute old and new local energy
     old_loc_en = local_energy(pl.adjacencyS, pl.adjacencyHC, i)
-    new_adjacencyS = refresh_adjacency_matrix(pl.adjacencyS, pl.points, new_config[i], pl.RS, i, pl.d)
-    new_adjacencyHC = refresh_adjacency_matrix(pl.adjacencyHC, pl.points, new_config[i], pl.RHC, i, pl.d)
+    new_adjacencyS = refresh_adjacency_matrix(copy(pl.adjacencyS), pl.points, pl.RS, new_config[i], i, pl.d)
+    new_adjacencyHC = isnothing(pl.RHC) ? copy(pl.adjacencyHC) : refresh_adjacency_matrix(copy(pl.adjacencyHC), pl.points, pl.RHC, new_config[i], i, pl.d)
     new_loc_en = local_energy(new_adjacencyS, new_adjacencyHC, i)
 
     # Metropolis-Hastings acceptance ratio
@@ -44,9 +43,10 @@ function iterate!(pl::PerturbedLatticeModel)
     elseif new_loc_en == Inf
         r = 0.0
     elseif old_loc_en == Inf
-        r = 1.0 
+        r = 1.0
+    else
+        r = exp(-pl.beta * (new_loc_en - old_loc_en))
     end
-    r = exp(-pl.beta * (new_loc_en - old_loc_en))
 
     if rand(pl.rng) <= r
         pl.points = new_config

@@ -17,7 +17,7 @@ function vec_loc_en_W(pl::PerturbedLattice, points_D_n::Vector{Vector{Float64}},
     config = [points_D_n; points_W_n_boundary]
 
     # Calculer la matrice d'adjacence pour la configuration initiale
-    config_adjacency = compute_adjacency_matrix(config, pl.RS)
+    config_adjacency = compute_adjacency_matrix(config, pl.RS, 2)
 
     # Pour chaque point dans D_n
     for i in 1:n_points_D
@@ -29,7 +29,7 @@ function vec_loc_en_W(pl::PerturbedLattice, points_D_n::Vector{Vector{Float64}},
             new_point = grid_D_n[i] .+ grid[j]
 
             # Mettre à jour la matrice d'adjacence pour la nouvelle position
-            refresh_adjacency_matrix!(temp_adjacency, config, pl.RS, new_point, i)
+            refresh_adjacency_matrix(temp_adjacency, config, pl.RS, new_point, i, 2)
 
             # Calculer l'énergie locale du point i en utilisant local_energy
             loc_en = local_energy(temp_adjacency, i)
@@ -69,4 +69,31 @@ function DLR_W(pl::PerturbedLattice, points_D_n::Vector{Vector{Float64}}, grid_D
         DLR_1 += ( (X_i[1]^2 + X_i[2]^2)/2- num_1/denom)
     end
     return DLR_1/N_points, DLR_2 / N_points
+end
+
+
+function fit(pl::PerturbedLattice, beta_init::Float64, theta_init::Float64, points_D_n::Vector{Vector{Float64}}, grid_D_n::Vector{Vector{Float64}}, points_W_n_boundary::Vector{Vector{Float64}}, W_n::Matrix{Float64}, N_est::Int64, B::Matrix{Float64})
+    vec_loc_en_W, config_adjacency = vec_loc_en_W(pl, points_D_n, grid_D_n, points_W_n_boundary, W_n, N_est, B)
+
+    # Fonction objectif : DLR²
+    function objective(params)
+        beta, theta = params[1], params[2]
+
+        # Calculer DLR
+        dlr_value_1, dlr_value_2 = DLR_W(pl, points_D_n, grid_D_n, points_W_n_boundary, beta, theta, vec_loc_en_W, config_adjacency, N_est, B, W_n)
+        dlr_squared = dlr_value_1^2 + dlr_value_2^2
+        return dlr_squared
+    end
+
+    # Optimisation sans contraintes
+    result = optimize(objective, [beta_init, theta_init], NelderMead())
+
+    minimizer = Optim.minimizer(result)
+    beta_opt = minimizer[1]
+    theta_opt = minimizer[2]
+
+    dlr_squared_opt = Optim.minimum(result)
+    dlr_opt = sqrt(dlr_squared_opt)
+
+    return beta_opt, theta_opt, dlr_opt, vec_loc_en_W, config_adjacency
 end

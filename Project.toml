@@ -4,28 +4,22 @@ authors = ["ChristopherRChan <crenaudchan@gmail.com> and contributors"]
 version = "1.0.0-DEV"
 
 [deps]
-CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
-DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
-GeoStats = "dcc97b0b-8ce5-5539-9008-bb190f959ef6"
-GeoStatsProcesses = "aa102bde-5a27-4b0c-b2c1-e7a7dcc4c3e7"
 Infinity = "a303e19e-6eb4-11e9-3b09-cd9505f79100"
-Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
+JLD2 = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Optim = "429524aa-4258-5aef-a3af-852621145aeb"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
-StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
-CairoMakie = "0.12.17"
-DataFrames = "1.7.0"
-Distributions = "0.25.113"
-GeoStats = "0.71.5"
-GeoStatsProcesses = "0.8.3"
-Infinity = "0.2.4"
-Makie = "0.21.17"
-Optim = "1.11.0"
-Random = "1.11.0"
-StatsBase = "0.34.4"
+Distributions = "0.25"
+Infinity = "0.2"
+JLD2 = "0.4"
+Optim = "1.0"
+Plots = "1.0"
+StaticArrays = "1.0"
 julia = "1.10"
 
 [extras]

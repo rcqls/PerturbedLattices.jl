@@ -1,5 +1,5 @@
 """
-    PerturbedLatticeModel
+    PerturbedLattice
 
 A structure for managing perturbed lattice point processes in 2D or 3D.
 
@@ -45,7 +45,8 @@ mutable struct PerturbedLattice
     seed::Union{Int, Nothing}
     rng::AbstractRNG
 
-    function PerturbedLattice(d::Int, N::Int;
+    function PerturbedLattice(N::Int;
+                              d::Int=2,
                               H::Union{String, Nothing}=nothing,
                               RS::Union{Real, Nothing}=nothing,
                               RHC::Union{Real, Nothing}=nothing,
@@ -56,34 +57,37 @@ mutable struct PerturbedLattice
                               seed::Union{Int, Nothing}=nothing,
                               NMC::Int64=10000)
 
-        # Type conversions
         RS_float = isnothing(RS) ? nothing : Float64(RS)
         RHC_float = isnothing(RHC) ? nothing : Float64(RHC)
         beta_float = isnothing(beta) ? nothing : Float64(beta)
-        sigma_float = isnothing(sigma) ? nothing : Float64(sigma)
         BorneUnif_mat = isnothing(BorneUnif) ? nothing : Float64.(BorneUnif)
-        Cov_mat = isnothing(Cov) ? nothing : Float64.(Cov)
 
-        # Initialize random number generator
+        if !isnothing(sigma)
+            sigma_f = Float64(sigma)
+            Cov_mat = sigma_f^2 * Matrix{Float64}(I, d, d)
+            Distrib = isnothing(Distrib) ? "Gauss" : Distrib
+        else
+            Cov_mat = nothing
+        end
+
         rng = isnothing(seed) ? Random.default_rng() : MersenneTwister(seed)
 
-        # Create instance without grid, points, and loc_en
-        obj = new(N, d, NMC, H, RS_float, RHC_float, beta_float,sigma_float,
-                  Distrib, BorneUnif_mat, Vector{Vector{Float64}}(), Vector{Vector{Float64}}(),
-                  Float64[], zeros(0,0), seed, rng)
+        obj = new(N, d, NMC, H, RS_float, RHC_float, beta_float,
+                  Distrib, BorneUnif_mat, Cov_mat,
+                  Vector{Vector{Float64}}(), Vector{Vector{Float64}}(),
+                  zeros(Int, 0, 0), zeros(Int, 0, 0),
+                  seed, rng)
 
-        # Initialize grid and points
         obj.grid = create_grid(obj)
         obj.points = deepcopy(obj.grid)
-        obj.loc_en = local_energy_vec(obj)
-        obj.adjacencyS = compute_adjacency_matrix(obj.points, obj.RS)
-        obj.adjacencyHC = compute_adjacency_matrix(obj.points, obj.RHC)
+        n = length(obj.points)
+        obj.adjacencyS = isnothing(RS_float) ? zeros(Int, n, n) : compute_adjacency_matrix(obj.points, RS_float, d)
+        obj.adjacencyHC = isnothing(RHC_float) ? zeros(Int, n, n) : compute_adjacency_matrix(obj.points, RHC_float, d)
 
         return obj
     end
 end
 
-# Extend Base functions for convenience
 Base.length(pl::PerturbedLattice) = length(pl.points)
 
 function Base.show(io::IO, pl::PerturbedLattice)
