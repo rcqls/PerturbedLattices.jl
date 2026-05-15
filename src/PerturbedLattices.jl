@@ -13,7 +13,9 @@ export PerturbedLatticeModel
 export Grid
 export StraussHamiltonian, HardCoreHamiltonian
 export GaussianMoveModel, UniformMoveModel
-export rand
+export rand!
+export plot 
+
 # Core types
 export PerturbedLatticeV1
 
@@ -32,11 +34,11 @@ abstract type AbstractPerturbedLatticeModel end
 include("grid.jl")
 include("hamiltonian.jl")
 include("move_model.jl")
-#include("simulation.jl")
-#include("visualization.jl")
 #include("estimation.jl")
 #include("data_creation.jl")
 include("perturbed_lattice_model.jl")
+include("simulation.jl")
+include("visualization.jl")
 
 
 include("v1/perturbedLatticeModel.jl")

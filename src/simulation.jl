@@ -20,7 +20,7 @@ function iterate!(rng::AbstractRNG, pl::PerturbedLatticeModel)
     elseif old_loc_en == Inf
         r = 1.0
     else
-        r = exp(-pl.beta * (new_loc_en - old_loc_en))
+        r = exp(-(new_loc_en - old_loc_en))
     end
 
     if rand(rng) <= r
@@ -29,13 +29,11 @@ function iterate!(rng::AbstractRNG, pl::PerturbedLatticeModel)
         pl.h.adjacency = old_adjacency
     end
 end
-import Random: rand
-Random.default_rng()
 
-function Base.rand(rng::AbstractRNG, pl::PerturbedLatticeModel; NMC::Int=1000)
-    for 1:NMC
+function Random.rand!(rng::AbstractRNG, pl::PerturbedLatticeModel; NMC::Int=1000)
+    for i in 1:NMC
         iterate!(rng, pl)
-     end
+    end
 end
 
-Base.rand(pl::PerturbedLatticeModel; NMC::Int=1000) = rand(Random.default_rng(), pl; NMC=NMC)
+Random.rand!(pl::PerturbedLatticeModel; NMC::Int=1000) = rand!(Random.default_rng(), pl; NMC=NMC)

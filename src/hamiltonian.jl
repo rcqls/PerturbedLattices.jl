@@ -73,6 +73,8 @@ end
 
 function adjacency_matrix!(h::AbstractHamiltonian, i::Int, new_point::Point)
     n_points = length(h.lattice.points)
+    d = h.lattice.d
+    points = h.lattice.points
     adjacency = h.adjacency
 
     # Réinitialiser la ligne et la colonne i

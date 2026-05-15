@@ -1,5 +1,4 @@
 using PerturbedLattices
-#using Plots
 
 
 grid =  Grid(20, 2)
@@ -11,14 +10,12 @@ pl = PerturbedLatticeModel(h, move, grid)
 
 # Warmup phase
 println("Starting warmup ...")
-@time begin
-    rand(pl)
-end
+@time rand!(pl, NMC=100)
+
 println("Warmup completed!\n")
 
 # Plot the point grid connection
-#p = plot_point_grid_connection(pl, Window)
-
+p = plot(pl, [-5.0 5.0; -5.0 5.0])
 display(p)
 
 
