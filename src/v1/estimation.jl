@@ -10,7 +10,7 @@ function create_int_estimation_grid(B::Matrix{Float64}, Nest::Int64)
     return grid
 end
 
-function vec_loc_en_W(pl::PerturbedLattice, points_D_n::Vector{Vector{Float64}}, grid_D_n::Vector{Vector{Float64}}, points_W_n_boundary::Vector{Vector{Float64}}, W_n::Matrix{Float64}, Nest::Int64, B::Matrix{Float64})
+function vec_loc_en_W(pl::PerturbedLatticeV1, points_D_n::Vector{Vector{Float64}}, grid_D_n::Vector{Vector{Float64}}, points_W_n_boundary::Vector{Vector{Float64}}, W_n::Matrix{Float64}, Nest::Int64, B::Matrix{Float64})
     n_points_D = length(points_D_n)
     vec_loc_en_W = zeros(n_points_D, Nest^2)
     grid = create_int_estimation_grid(B, Nest)
@@ -44,7 +44,7 @@ function vec_loc_en_W(pl::PerturbedLattice, points_D_n::Vector{Vector{Float64}},
     return vec_loc_en_W, config_adjacency
 end
 
-function DLR_W(pl::PerturbedLattice, points_D_n::Vector{Vector{Float64}}, grid_D_n::Vector{Vector{Float64}}, points_W_n_boundary::Vector{Vector{Float64}}, beta::Float64, theta::Float64, vec_loc_en_W::Matrix{Float64}, config_adjacency::Matrix{Int}, N_est::Int64, B::Matrix{Float64}, W_n::Matrix{Float64})
+function DLR_W(pl::PerturbedLatticeV1, points_D_n::Vector{Vector{Float64}}, grid_D_n::Vector{Vector{Float64}}, points_W_n_boundary::Vector{Vector{Float64}}, beta::Float64, theta::Float64, vec_loc_en_W::Matrix{Float64}, config_adjacency::Matrix{Int}, N_est::Int64, B::Matrix{Float64}, W_n::Matrix{Float64})
     DLR_2 = 0.0
     DLR_1 = 0.0
     N_points = length(points_D_n)
@@ -72,7 +72,7 @@ function DLR_W(pl::PerturbedLattice, points_D_n::Vector{Vector{Float64}}, grid_D
 end
 
 
-function fit(pl::PerturbedLattice, beta_init::Float64, theta_init::Float64, points_D_n::Vector{Vector{Float64}}, grid_D_n::Vector{Vector{Float64}}, points_W_n_boundary::Vector{Vector{Float64}}, W_n::Matrix{Float64}, N_est::Int64, B::Matrix{Float64})
+function fit(pl::PerturbedLatticeV1, beta_init::Float64, theta_init::Float64, points_D_n::Vector{Vector{Float64}}, grid_D_n::Vector{Vector{Float64}}, points_W_n_boundary::Vector{Vector{Float64}}, W_n::Matrix{Float64}, N_est::Int64, B::Matrix{Float64})
     vec_loc_en_W, config_adjacency = vec_loc_en_W(pl, points_D_n, grid_D_n, points_W_n_boundary, W_n, N_est, B)
 
     # Fonction objectif : DLR²

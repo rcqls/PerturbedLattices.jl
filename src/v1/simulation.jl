@@ -1,8 +1,8 @@
 """
 Monte Carlo simulation functions using Metropolis-Hasting algorithm. 
 """
-function iterate!(pl::PerturbedLattice)
-    new_config = deepcopy(pl.points)
+function iterate!(pl::PerturbedLatticeV1)
+    new_config = pl.points
     i = rand(pl.rng, 1:(2*pl.N+1)^pl.d)
 
     # Propose new position based on distribution

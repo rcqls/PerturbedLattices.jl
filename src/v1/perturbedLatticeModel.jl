@@ -23,7 +23,7 @@ A structure for managing perturbed lattice point processes in 2D or 3D.
 
 """
 
-mutable struct PerturbedLattice
+mutable struct PerturbedLatticeV1
     N::Int
     d::Int
     NMC::Int
@@ -45,7 +45,7 @@ mutable struct PerturbedLattice
     seed::Union{Int, Nothing}
     rng::AbstractRNG
 
-    function PerturbedLattice(N::Int;
+    function PerturbedLatticeV1(N::Int;
                               d::Int=2,
                               H::Union{String, Nothing}=nothing,
                               RS::Union{Real, Nothing}=nothing,
@@ -88,8 +88,8 @@ mutable struct PerturbedLattice
     end
 end
 
-Base.length(pl::PerturbedLattice) = length(pl.points)
+Base.length(pl::PerturbedLatticeV1) = length(pl.points)
 
-function Base.show(io::IO, pl::PerturbedLattice)
-    print(io, "PerturbedLattice(d=$(pl.d), N=$(pl.N), $(length(pl)) points)")
+function Base.show(io::IO, pl::PerturbedLatticeV1)
+    print(io, "PerturbedLatticeV1   (d=$(pl.d), N=$(pl.N), $(length(pl)) points)")
 end

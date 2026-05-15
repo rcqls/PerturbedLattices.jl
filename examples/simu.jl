@@ -1,16 +1,11 @@
-""" 
-Simulation of a perturbed lattice model with Strauss potential and Gaussian perturbations.
-
-"""
-
 using PerturbedLattices
 using Plots
 
 beta_values = [-log(0.9)]
-sigma_values = [0.5, 1.0]
-RS_values = [0.5, 1.5]
+sigma_values = [1.0]
+RS_values = [1.5]
 N_lattice = 30
-warmup_iterations = 100
+warmup_iterations = 1_000
 Window = [-5.0 5.0; -5.0 5.0]
 
 for beta in beta_values
@@ -21,7 +16,7 @@ for beta in beta_values
             println("="^60)
 
             # Create the lattice
-            pl = PerturbedLattice(N_lattice, RS=rs, beta=beta, sigma=sigma, seed=1234)
+            pl = PerturbedLatticeV1(N_lattice, RS=rs, beta=beta, sigma=sigma, seed=1234)
 
             # Warmup phase
             println("Starting warmup ($warmup_iterations iterations)...")

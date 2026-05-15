@@ -2,7 +2,7 @@
     Extraction of points within a window and separation between interior and boundary points. 
 """
 
-function points_in_window(pl::PerturbedLattice, W::Matrix{Float64}, m_n::Float64)
+function points_in_window(pl::PerturbedLatticeV1, W::Matrix{Float64}, m_n::Float64)
     points_D_n = Vector{Vector{Float64}}()
     grid_D_n = Vector{Vector{Float64}}()
     points_W_n_boundary = Vector{Vector{Float64}}()
