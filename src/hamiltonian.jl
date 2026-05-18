@@ -5,7 +5,7 @@ mutable struct StraussHamiltonian <: AbstractHamiltonian
     radius::Float64 
     # fields required for AbstractHamiltonian
     lattice::AbstractLattice
-    adjacency::Matrix{Int}
+    adjacency::Matrix{Bool}
 
     function StraussHamiltonian(beta::Float64, radius::Float64, lattice::AbstractLattice)
         sh = new(beta, radius, lattice)
@@ -19,7 +19,7 @@ mutable struct HardCoreHamiltonian <: AbstractHamiltonian
     radius::Float64
     # fields required for AbstractHamiltonian
     lattice::AbstractLattice
-    adjacency::Matrix{Int}
+    adjacency::Matrix{Bool}
 
     function HardCoreHamiltonian(radius::Float64, lattice::AbstractLattice)
         hch = new(radius, lattice)
@@ -35,7 +35,7 @@ function local_energy(h::StraussHamiltonian, i::Int)
 end
 
 function local_energy(h::HardCoreHamiltonian, i::Int)
-    if any(h.adjacency[i, :] .== 1)
+    if any(h.adjacency[i, :] )
         return Inf
     end
     return 0.0
@@ -45,7 +45,7 @@ function adjacency_matrix!(h::AbstractHamiltonian)
     points = h.lattice.points
     d = h.lattice.d
     n_points = length(points)
-    adjacency = zeros(Int, n_points, n_points)
+    adjacency = falses(n_points, n_points)
 
     for i in 1:n_points
         for j in (i+1):n_points
@@ -61,8 +61,8 @@ function adjacency_matrix!(h::AbstractHamiltonian)
             end
 
             if dist_sq <= h.radius^2
-                adjacency[i, j] = 1
-                adjacency[j, i] = 1
+                adjacency[i, j] = true
+                adjacency[j, i] = true
             end
         end
     end
@@ -78,8 +78,8 @@ function adjacency_matrix!(h::AbstractHamiltonian, i::Int, new_point::Point)
     adjacency = h.adjacency
 
     # Réinitialiser la ligne et la colonne i
-    adjacency[i, :] .= 0
-    adjacency[:, i] .= 0
+    adjacency[i, :] .= false
+    adjacency[:, i] .= false
 
     # Recalculer les adjacences pour le point i à sa nouvelle position
     for j in 1:n_points
@@ -95,8 +95,8 @@ function adjacency_matrix!(h::AbstractHamiltonian, i::Int, new_point::Point)
                 dist_sq = dx*dx + dy*dy + dz*dz
             end
             if dist_sq <= h.radius^2
-                adjacency[i, j] = 1
-                adjacency[j, i] = 1
+                adjacency[i, j] = true
+                adjacency[j, i] = true
             end
         end
     end

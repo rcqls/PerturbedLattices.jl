@@ -10,7 +10,7 @@ pl = PerturbedLatticeModel(h, move, grid)
 
 # Warmup phase
 println("Starting warmup ...")
-@time rand!(pl, NMC=100)
+@time rand!(pl, NMC=1000)
 
 println("Warmup completed!\n")
 
