@@ -28,20 +28,20 @@ mutable struct PerturbedLatticeModel <: AbstractPerturbedLatticeModel
 
     move::AbstractMoveModel
 
-    grid::Grid
-    points::Vector{Point}
+    points::Points
 
 end
 
-function PerturbedLatticeModel(h::AbstractHamiltonian, move::AbstractMoveModel, grid::Grid)
-    pl = PerturbedLatticeModel(h, move, grid, deepcopy(grid.points))
+function PerturbedLatticeModel(h::AbstractHamiltonian, move::AbstractMoveModel, win_radius::Int, d::Int=2)
+    points = Points(win_radius, d)
+    pl = PerturbedLatticeModel(h, move, points)
     return pl
 end
 
 PerturbedLatticeModel(h::AbstractHamiltonian, move::AbstractMoveModel; N::Int=20, d::Int=2) = PerturbedLatticeModel(h, move, Grid(N, d))
 
-Base.length(pl::PerturbedLatticeModel) = length(pl.grid)
+Base.length(pl::PerturbedLatticeModel) = length(pl.points.grid)
 
 function Base.show(io::IO, pl::PerturbedLatticeModel)
-    print(io, "PerturbedLatticeModel  (d=$(pl.grid.d), N=$(pl.grid.N), $(length(pl)) points)")
+    print(io, "PerturbedLatticeModel  (d=$(pl.points.grid.d), N=$(pl.points.grid.N), $(length(pl)) points)")
 end

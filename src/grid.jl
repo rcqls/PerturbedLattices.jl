@@ -41,3 +41,7 @@ function init!(g::Grid)
     end
 
 end
+
+
+#SubGrid is just a grid with SubGrid.N < Grid.N
+
